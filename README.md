@@ -275,12 +275,3 @@ Measured on a 2-core laptop CPU without a GPU:
 
 ---
 
-## Credits
-
-Built by integrating two repositories:
-[197Ashutosh/grab_and_go](https://github.com/197Ashutosh/grab_and_go) (web kiosk, CLIP, barcode) and
-[197Ashutosh/P35-Decentralized_Edge_Based_Grab_and_Go](https://github.com/197Ashutosh/P35-Decentralized_Edge_Based_Grab_and_Go)
-(YOLOv8 edge detection, interaction logic, training pipeline, sample videos).
-
-Models: [Ultralytics YOLOv8](https://github.com/ultralytics/ultralytics) · [OpenAI CLIP](https://github.com/openai/CLIP) ·
-ByteTrack · ZBar.

@@ -1,0 +1,81 @@
+{% extends "_base.html" %}
+{% block title %}{{ store_name }} · Self-checkout{% endblock %}
+
+{% block topbar %}
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark" data-icon="bag"></span>
+      <span>
+        <span class="brand-name">{{ store_name }}</span><br>
+        <span class="brand-sub">{{ kiosk_name }}</span>
+      </span>
+    </a>
+    <div class="topbar-actions">
+      <span id="camPill" class="pill off"><span class="dot"></span><span id="camPillText" data-i18n="camOff">Camera off</span></span>
+      <button id="langBtn" class="btn" type="button" aria-label="Change language"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8l6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg><span class="lbl">EN</span></button>
+      <button class="btn btn-primary" type="button" data-call-staff data-icon="phoneCall"><span data-i18n="callStaff">Call staff</span></button>
+    </div>
+  </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="page split">
+  <section aria-label="Scanner">
+    <div id="cam" class="cam">
+      <video id="video" playsinline muted></video>
+      <canvas id="view" aria-label="Live camera view with detected products" role="img"></canvas>
+
+      <div id="camLive" hidden>
+        <div class="reticle" id="reticle"><i></i><i></i><i></i><i></i></div>
+        <div class="scanline" id="scanline"></div>
+        <div class="cam-top">
+          <span class="cam-chip"><span class="dot"></span><span data-i18n="scanning">Scanning</span><span id="latency" class="muted" style="color:#BAE6FD"></span></span>
+          <button id="stopBtn" class="cam-chip btn-chip" type="button" data-icon="cameraOff"><span data-i18n="stopBtn">Stop camera</span></button>
+        </div>
+        <div class="cam-hint" id="hint"><span class="cam-chip" data-i18n="holdHint">Hold the item inside the frame</span></div>
+        <div id="addedCard" class="added-card" hidden>
+          <div class="tile" id="addedIcon"></div>
+          <div style="min-width:0">
+            <div class="name" id="addedName"></div>
+            <div class="ok"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg><span data-i18n="added">Added to cart</span></div>
+          </div>
+          <button id="undoBtn" class="btn" type="button" data-icon="undo"><span data-i18n="undo">Undo</span></button>
+        </div>
+      </div>
+
+      <div id="camIdle" class="cam-idle">
+        <div class="ring" data-icon="camera"></div>
+        <h2 data-i18n="startTitle">Start the camera to begin scanning</h2>
+        <p data-i18n="startSub">Hold each item inside the frame. We recognise the product or its barcode and add it for you.</p>
+        <p id="camError" class="err" hidden></p>
+        <button id="startBtn" class="btn btn-primary btn-lg" type="button" data-icon="camera"><span data-i18n="startBtn">Initialize camera</span></button>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step" id="step1"><span class="tile" data-icon="scan"></span><div><div class="t"><small>1.</small><span data-i18n="s1">Show item</span></div><div class="d" data-i18n="s1d">Hold it up to the camera</div></div></div>
+      <div class="step" id="step2"><span class="tile" data-icon="basket"></span><div><div class="t"><small>2.</small><span data-i18n="s2">Check cart</span></div><div class="d" data-i18n="s2d">Items add by themselves</div></div></div>
+      <div class="step" id="step3"><span class="tile" data-icon="card"></span><div><div class="t"><small>3.</small><span data-i18n="s3">Pay</span></div><div class="d" data-i18n="s3d">UPI, card or wallet</div></div></div>
+    </div>
+  </section>
+
+  <aside class="card cart" aria-label="Your cart">
+    <div class="cart-head">
+      <h2 data-i18n="cart">Your cart</h2>
+      <span class="muted" id="cartCount"></span>
+    </div>
+    <div class="cart-list" id="cartList" aria-live="polite"></div>
+    <div class="totals">
+      <div class="line"><span data-i18n="subtotal">Subtotal</span><span id="subtotal">₹0.00</span></div>
+      <div class="line"><span><span data-i18n="gst">GST</span> ({{ gst_percent }}%)</span><span id="tax">₹0.00</span></div>
+      <div class="grand"><span data-i18n="total">Total</span><span class="money" id="grand">₹0.00</span></div>
+      <a id="payBtn" class="btn btn-primary btn-lg btn-block" href="/checkout" aria-disabled="true"><span id="payText">Pay ₹0.00</span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></a>
+      <button id="clearBtn" class="btn btn-danger-text" type="button" data-icon="trash"><span data-i18n="clear">Clear cart</span></button>
+    </div>
+  </aside>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="/static/js/kiosk.js?v=4"></script>{% endblock %}

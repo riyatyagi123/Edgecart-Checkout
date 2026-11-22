@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ store_name }}{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/app.css?v=4">
+  {% block head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  <a class="sr-only" href="#main">Skip to content</a>
+  {% block topbar %}{% endblock %}
+  <main id="main">{% block content %}{% endblock %}</main>
+
+  <nav class="nav-pill" aria-label="Screens">
+    <a href="/"><span class="n">1</span><span class="lbl">Kiosk</span></a>
+    <a href="/checkout"><span class="n">2</span><span class="lbl">Checkout</span></a>
+    <a href="/payment-success"><span class="n">3</span><span class="lbl">Receipt</span></a>
+    <a href="/dashboard"><span class="n">4</span><span class="lbl">Dashboard</span></a>
+  </nav>
+  <div id="toasts" class="toasts" role="status" aria-live="polite"></div>
+
+  <script>window.GG_CONFIG = { gstPercent: {{ gst_percent }}, kiosk: {{ kiosk_name|tojson }} };</script>
+  <script src="/static/js/common.js?v=4"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,38 @@
+flowchart TD
+    User(["User Approximates Shelf Area"]) --> Camera["Optical Sensors Capture Video Array"]
+    Camera --> Edge["Edge Node (Raspberry Pi / Jetson) Local Ingestion"]
+
+    Edge --> YOLO["YOLOv8 Edge Vision Engine"]
+    YOLO --> BBox["Bounding Box Regression (Hands & Products)"]
+
+    BBox --> Intersect{"Hand-to-Product Intersection Detected?"}
+
+    Intersect -- "Yes" --> CalcIoU["Compute Spatial Overlap (IoU Metric)"]
+    CalcIoU --> Classify{"Classify State Machine Event"}
+
+    Classify -- "Take" --> TakeEvent["Target Displaced from Shelf"]
+    Classify -- "Return" --> ReturnEvent["Target Re-enters Shelf Coordinate"]
+    Classify -- "Touch" --> TouchEvent["Spatial Overlap; No Displacement"]
+
+    TakeEvent --> PayloadAdd["WebSocket Payload: Append to Digital Ledger"]
+    ReturnEvent --> PayloadRemove["WebSocket Payload: Remove from Digital Ledger"]
+    TouchEvent --> LogWait["Log Event; Await Movement"]
+
+    PayloadAdd --> UICart[/"Real-Time Virtual Shopping Cart UI"/]
+    PayloadRemove --> UICart
+
+    Intersect -- "No" --> RestState["Execute Dynamic Resting State Algorithm"]
+    RestState --> Deviation{"Deviation in Static Coordinates?"}
+
+    Deviation -- "Yes" --> Remap["Autonomously Reconcile Inventory Map"]
+    Deviation -- "No" --> Passive["Maintain Passive Spatial Monitoring"]
+
+    classDef startend fill:#d5e8d4,stroke:#82b366,stroke-width:2px;
+    classDef process fill:#dae8fc,stroke:#6c8ebf,stroke-width:2px;
+    classDef decision fill:#ffe6cc,stroke:#d79b00,stroke-width:2px;
+    classDef data fill:#e1d5e7,stroke:#9673a6,stroke-width:2px;
+    
+    class User,UICart startend;
+    class Camera,Edge,YOLO,BBox,CalcIoU,TakeEvent,ReturnEvent,TouchEvent,RestState,Remap,Passive process;
+    class Intersect,Classify,Deviation decision;
+    class PayloadAdd,PayloadRemove,LogWait data;

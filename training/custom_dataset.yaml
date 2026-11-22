@@ -1,0 +1,6 @@
+# Generated/overwritten by auto_train.py. Paths relative to this file's folder.
+path: custom_dataset
+train: images/train
+val: images/val
+names:
+  0: Grocery Product

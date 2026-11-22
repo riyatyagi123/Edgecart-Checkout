@@ -1,0 +1,9 @@
+__pycache__/
+.venv/
+models/clip/
+training/runs/
+training/custom_dataset/
+*.onnx
+
+models/*.pt
+sample_videos/

@@ -1,0 +1,94 @@
+{% extends "_base.html" %}
+{% block title %}{{ store_name }} · Checkout{% endblock %}
+
+{% block topbar %}
+<header class="topbar">
+  <div class="topbar-inner" style="max-width:1200px">
+    <div style="display:flex;align-items:center;gap:16px">
+      <a class="btn" href="/" data-icon="arrowL">Back</a>
+      <span class="brand-name">{{ store_name }} · Checkout</span>
+    </div>
+    <div class="stepper" aria-label="Progress">
+      <span>Step <b style="color:var(--ink)">2</b> of 3</span>
+      <span class="s done"><span class="b"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width:14px;height:14px;stroke-width:3"><path d="M5 12l5 5L20 7"/></svg></span>Cart</span>
+      <span class="bar"></span>
+      <span class="s cur" aria-current="step"><span class="b">2</span>Payment</span>
+      <span class="bar"></span>
+      <span class="s"><span class="b">3</span>Receipt</span>
+    </div>
+  </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="page" style="max-width:1200px">
+  <div id="emptyState" class="card card-pad empty" hidden>
+    <div class="tile" data-icon="basket"></div>
+    <b>Your cart is empty</b>
+    <p style="margin:4px 0 18px">Scan an item at the kiosk before paying.</p>
+    <a class="btn btn-primary" href="/" data-icon="scan">Back to scanning</a>
+  </div>
+
+  <div id="checkout" class="split" style="grid-template-columns:minmax(0,1fr) 400px" hidden>
+    <section class="card" style="padding:28px" aria-labelledby="payTitle">
+      <h1 id="payTitle" style="font-size:28px">Choose how to pay</h1>
+      <p class="muted" style="margin:6px 0 22px">Amount due <span class="money" style="color:var(--ink);font-size:20px" id="due">₹0.00</span></p>
+
+      <div class="methods" role="radiogroup" aria-label="Payment method">
+        <button class="method" type="button" role="radio" aria-checked="true" data-method="upi">
+          <span class="badge">Recommended</span>
+          <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h3v-3"/></svg>
+          <span class="t">UPI</span><span class="d">Google Pay, PhonePe, Paytm</span>
+        </button>
+        <button class="method" type="button" role="radio" aria-checked="false" data-method="card">
+          <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>
+          <span class="t">Card</span><span class="d">Tap or insert on the reader</span>
+        </button>
+        <button class="method" type="button" role="radio" aria-checked="false" data-method="wallet">
+          <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7H5a2 2 0 0 1 0-4h13v4"/><path d="M3 5v14a2 2 0 0 0 2 2h15V7"/><path d="M16 14h.01"/></svg>
+          <span class="t">Wallet</span><span class="d">Pay from store wallet</span>
+        </button>
+      </div>
+
+      <div class="card" style="margin-top:20px;padding:22px;box-shadow:none">
+        <div class="paybox">
+          <div id="qrBox" class="qr"><img id="qrImg" alt="UPI payment QR code"></div>
+          <div id="readerBox" class="reader" hidden></div>
+          <div style="flex:1 1 260px;display:flex;flex-direction:column;gap:16px">
+            <h2 id="payHow" style="font-size:19px">Scan the QR code</h2>
+            <ol class="olist" id="paySteps"></ol>
+          </div>
+        </div>
+        <div class="waiting" style="margin-top:20px">
+          <span class="spinner" aria-hidden="true"></span>
+          <div style="flex:1">
+            <div class="t">Waiting for payment…</div>
+            <div class="d">Payment confirmation is simulated in this demo. Press the button once paid.</div>
+          </div>
+          <button id="confirmBtn" class="btn btn-primary" type="button">I've paid</button>
+        </div>
+      </div>
+    </section>
+
+    <aside style="display:flex;flex-direction:column;gap:18px">
+      <div class="card" aria-labelledby="sumTitle">
+        <div style="padding:22px 22px 6px"><h2 id="sumTitle" style="font-size:19px">Order summary</h2></div>
+        <div id="sumList" style="padding:0 22px"></div>
+        <div class="totals" style="padding:16px 22px 20px">
+          <div class="line"><span>Subtotal</span><span id="sumSub">₹0.00</span></div>
+          <div class="line"><span>GST ({{ gst_percent }}%)</span><span id="sumTax">₹0.00</span></div>
+          <div class="grand"><span>Total</span><span class="money" id="sumTotal">₹0.00</span></div>
+          <div class="note"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>Secure payment · GST {{ gst_percent }}% (CGST {{ '%g' % (gst_percent / 2) }}% + SGST {{ '%g' % (gst_percent / 2) }}%)</div>
+        </div>
+      </div>
+      <div class="card card-pad">
+        <h3 style="font-size:16px">Need help?</h3>
+        <p class="muted" style="margin:4px 0 14px;font-size:14px">Someone at the counter can finish this with you.</p>
+        <button class="btn btn-block" type="button" data-call-staff data-icon="phoneCall">Call staff</button>
+      </div>
+    </aside>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="/static/js/checkout.js?v=4"></script>{% endblock %}

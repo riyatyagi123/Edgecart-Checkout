@@ -1,0 +1,61 @@
+{% extends "_base.html" %}
+{% block title %}{{ store_name }} · Receipt{% endblock %}
+
+{% block topbar %}
+<header class="topbar">
+  <div class="topbar-inner" style="max-width:1200px">
+    <a class="brand" href="/">
+      <span class="brand-mark" data-icon="scan"></span>
+      <span><span class="brand-name">{{ store_name }}</span><br><span class="brand-sub">Walk-out checkout</span></span>
+    </a>
+    <span class="pill" id="resetPill" hidden><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span id="resetPillText"></span></span>
+  </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="receipt-wrap">
+  <div id="noOrder" class="card card-pad empty" hidden>
+    <div class="tile" data-icon="receipt"></div>
+    <b>No receipt to show yet</b>
+    <p style="margin:4px 0 18px">Complete a payment at checkout and the receipt appears here.</p>
+    <a class="btn btn-primary" href="/" data-icon="scan">Start scanning</a>
+  </div>
+
+  <div id="receipt" hidden style="display:flex;flex-direction:column;gap:18px">
+    <div style="text-align:center;display:flex;flex-direction:column;gap:8px">
+      <div class="success-mark" data-icon="checkCircle"></div>
+      <h1 style="font-size:30px;margin-top:6px">Payment successful</h1>
+      <p class="muted" style="margin:0">Thanks for shopping. Here is your receipt.</p>
+    </div>
+
+    <section class="card" aria-label="Receipt">
+      <div class="kv">
+        <div><div class="k">Order ID</div><div class="v" id="rId"></div></div>
+        <div><div class="k">Payment</div><div class="v" id="rMethod"></div></div>
+        <div><div class="k">Time</div><div class="v" id="rTime"></div></div>
+      </div>
+      <div id="rItems" style="padding:4px 20px"></div>
+      <div class="totals" style="background:var(--surface-2);border-radius:0 0 var(--radius) var(--radius)">
+        <div class="line"><span>Subtotal</span><span id="rSub"></span></div>
+        <div class="line"><span>GST {{ gst_percent }}%</span><span id="rTax"></span></div>
+        <div class="grand" style="border-top:1px solid var(--border);padding-top:12px;margin-bottom:0"><span>Total paid</span><span class="money" id="rTotal" style="color:var(--brand)"></span></div>
+      </div>
+    </section>
+
+    <form class="card card-pad" id="smsForm" novalidate>
+      <label for="phone" style="display:flex;align-items:center;gap:8px;font-weight:600;margin-bottom:12px;color:var(--ink)"><span data-icon="sms" style="color:var(--brand);display:inline-flex"></span>Send receipt by SMS</label>
+      <div class="phone">
+        <div class="field"><span class="cc">+91</span><input id="phone" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="10" placeholder="10-digit mobile number" aria-describedby="smsMsg"></div>
+        <button class="btn btn-primary" type="submit" style="min-width:90px">Send</button>
+      </div>
+      <p id="smsMsg" class="muted" style="margin:10px 0 0;font-size:13px" hidden></p>
+    </form>
+
+    <a id="newOrder" class="btn btn-dark btn-lg btn-block" href="/" data-icon="refresh">Start a new order</a>
+    <p class="muted" style="text-align:center;font-size:13px;margin:0" id="resetNote"></p>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="/static/js/receipt.js?v=4"></script>{% endblock %}

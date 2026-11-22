@@ -1,0 +1,28 @@
+# --- core AI ---
+torch>=2.0.0
+torchvision>=0.15.0
+ultralytics>=8.1.0
+lap>=0.5.12                 # ByteTrack object tracking (edge node)
+opencv-python>=4.10.0
+numpy
+pillow
+# CLIP vision-language model (brand recognition). Needs git installed.
+ftfy
+regex
+tqdm
+git+https://github.com/openai/CLIP.git
+# --- barcode ---
+pyzbar                      # Linux: sudo apt install libzbar0 | macOS: brew install zbar
+# --- web server ---
+fastapi>=0.110
+uvicorn[standard]
+jinja2
+python-multipart
+requests
+pyyaml
+# --- docs / tests ---
+matplotlib
+pytest
+httpx
+python-barcode
+qrcode                      # UPI QR code on the checkout page

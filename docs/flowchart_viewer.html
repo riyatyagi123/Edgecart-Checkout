@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patent Flowchart Viewer & Downloader</title>
+    <!-- Load Mermaid -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; background-color: #f5f5f5; text-align: center; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: inline-block; }
+        .mermaid { margin-bottom: 20px; background: white; padding: 20px; }
+        button { background-color: #4CAF50; color: white; padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Patent Flowchart</h2>
+        <button id="downloadBtn">Download as JPG</button>
+        <br><br>
+        
+        <!-- The Mermaid Diagram -->
+        <div class="mermaid" id="mermaid-diagram">
+flowchart TD
+    User(["User Approximates Shelf Area"]) --> Camera["Optical Sensors Capture Video Array"]
+    Camera --> Edge["Edge Node (Raspberry Pi / Jetson) Local Ingestion"]
+
+    Edge --> YOLO["YOLOv8 Edge Vision Engine"]
+    YOLO --> BBox["Bounding Box Regression (Hands & Products)"]
+
+    BBox --> Intersect{"Hand-to-Product Intersection Detected?"}
+
+    Intersect -- "Yes" --> CalcIoU["Compute Spatial Overlap (IoU Metric)"]
+    CalcIoU --> Classify{"Classify State Machine Event"}
+
+    Classify -- "Take" --> TakeEvent["Target Displaced from Shelf"]
+    Classify -- "Return" --> ReturnEvent["Target Re-enters Shelf Coordinate"]
+    Classify -- "Touch" --> TouchEvent["Spatial Overlap; No Displacement"]
+
+    TakeEvent --> PayloadAdd["WebSocket Payload: Append to Digital Ledger"]
+    ReturnEvent --> PayloadRemove["WebSocket Payload: Remove from Digital Ledger"]
+    TouchEvent --> LogWait["Log Event; Await Movement"]
+
+    PayloadAdd --> UICart[/"Real-Time Virtual Shopping Cart UI"/]
+    PayloadRemove --> UICart
+
+    Intersect -- "No" --> RestState["Execute Dynamic Resting State Algorithm"]
+    RestState --> Deviation{"Deviation in Static Coordinates?"}
+
+    Deviation -- "Yes" --> Remap["Autonomously Reconcile Inventory Map"]
+    Deviation -- "No" --> Passive["Maintain Passive Spatial Monitoring"]
+
+    classDef startend fill:#d5e8d4,stroke:#82b366,stroke-width:2px;
+    classDef process fill:#dae8fc,stroke:#6c8ebf,stroke-width:2px;
+    classDef decision fill:#ffe6cc,stroke:#d79b00,stroke-width:2px;
+    classDef data fill:#e1d5e7,stroke:#9673a6,stroke-width:2px;
+    
+    class User,UICart startend;
+    class Camera,Edge,YOLO,BBox,CalcIoU,TakeEvent,ReturnEvent,TouchEvent,RestState,Remap,Passive process;
+    class Intersect,Classify,Deviation decision;
+    class PayloadAdd,PayloadRemove,LogWait data;
+        </div>
+    </div>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            const svgElement = document.querySelector('.mermaid svg');
+            if (!svgElement) {
+                alert("Please wait for the diagram to render.");
+                return;
+            }
+
+            // Get SVG dimensions and data
+            const svgData = new XMLSerializer().serializeToString(svgElement);
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+            
+            // Set canvas size matching SVG
+            const rect = svgElement.getBoundingClientRect();
+            canvas.width = rect.width + 40;
+            canvas.height = rect.height + 40;
+            
+            // Fill white background (since JPG doesn't support transparency)
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const img = new Image();
+            img.setAttribute("src", "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgData))));
+            
+            img.onload = function() {
+                // Draw image to canvas with padding
+                ctx.drawImage(img, 20, 20);
+                
+                // Convert canvas to JPG
+                const imgURL = canvas.toDataURL("image/jpeg", 1.0);
+                
+                // Trigger download
+                const a = document.createElement("a");
+                a.download = "patent_flowchart.jpg";
+                a.href = imgURL;
+                a.click();
+            };
+        });
+    </script>
+</body>
+</html>

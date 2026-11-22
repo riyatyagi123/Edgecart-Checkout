@@ -1,0 +1,8 @@
+# Hand + product interaction dataset (patent design). Paths are relative to this file's folder.
+path: datasets/retail_interaction
+train: images/train
+val: images/val
+
+names:
+  0: hand
+  1: product

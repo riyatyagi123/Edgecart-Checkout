@@ -1,0 +1,64 @@
+{% extends "_base.html" %}
+{% block title %}{{ store_name }} · Store dashboard{% endblock %}
+
+{% block topbar %}
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="/dashboard">
+      <span class="brand-mark" data-icon="grid"></span>
+      <span><span class="brand-name">{{ store_name }}</span><br><span class="brand-sub">Store console</span></span>
+    </a>
+    <div class="topbar-actions">
+      <span class="pill ok live" id="livePill"><span class="dot"></span>Live</span>
+      <button class="btn" type="button" id="refreshBtn" data-icon="refresh">Refresh</button>
+      <a class="btn btn-primary" href="/" data-icon="camera">Open kiosk</a>
+    </div>
+  </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="page">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:18px">
+    <div>
+      <h1 style="font-size:28px">Store overview</h1>
+      <p class="muted" style="margin:4px 0 0">Kiosks, shelf cameras and orders, updated live</p>
+    </div>
+    <span class="muted" style="font-size:13px" id="updated"></span>
+  </div>
+
+  <div class="kpis">
+    <div class="card kpi"><div class="k" data-icon="receipt">Orders today</div><div class="v" id="kOrders">0</div><div class="s" id="kItems">0 items sold</div></div>
+    <div class="card kpi"><div class="k" data-icon="wallet">Revenue today</div><div class="v" id="kRevenue">₹0</div><div class="s">incl. GST {{ gst_percent }}%</div></div>
+    <div class="card kpi"><div class="k" data-icon="video">Devices online</div><div class="v" id="kDevices">0</div><div class="s" id="kDevicesS">No devices yet</div></div>
+    <div class="card kpi"><div class="k" data-icon="alert">Needs attention</div><div class="v" id="kActions">0</div><div class="s" id="kActionsS">All clear</div></div>
+  </div>
+
+  <div class="dash">
+    <section class="card" aria-labelledby="evTitle">
+      <div class="sec-head">
+        <h2 id="evTitle">Live events</h2>
+        <span class="muted" style="font-size:13px">Scans, shelf pick-ups, orders and help requests</span>
+      </div>
+      <div id="events"></div>
+    </section>
+
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <section class="card" aria-labelledby="devTitle">
+        <div class="sec-head"><h2 id="devTitle">Devices</h2></div>
+        <div id="devices"></div>
+      </section>
+      <section class="card" aria-labelledby="engTitle">
+        <div class="sec-head"><h2 id="engTitle">Vision engine</h2></div>
+        <div class="kv-list" id="engine"></div>
+      </section>
+      <section class="card" aria-labelledby="ordTitle">
+        <div class="sec-head"><h2 id="ordTitle">Recent orders</h2></div>
+        <div id="orders"></div>
+      </section>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="/static/js/dashboard.js?v=4"></script>{% endblock %}
